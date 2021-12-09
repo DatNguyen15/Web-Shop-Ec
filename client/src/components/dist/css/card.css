@@ -1,0 +1,22 @@
+.card-product {
+  -webkit-box-shadow: 0px 0px 4px -1px #333;
+  box-shadow: 0px 0px 4px -1px #333;
+  overflow: hidden;
+  -webkit-transition: all 0.6s;
+  transition: all 0.6s;
+}
+.card-product:hover {
+  -webkit-transform: translateY(-15px);
+  transform: translateY(-15px);
+}
+.card-product .img-size {
+  height: 350px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card-product .img-size img {
+  width: 80%;
+  height: 80%;
+}

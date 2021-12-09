@@ -1,54 +1,75 @@
-const mongoose = require('mongoose');
-const { ObjectId } = mongoose.Schema.Types
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema.Types;
 
 const productSchema = new mongoose.Schema({
     pName: {
         type: String,
-        required: true
+        required: true,
     },
     pDescription: {
         type: String,
-        required: true
+        required: true,
     },
     pPrice: {
         type: Number,
-        required: true
+        required: true,
     },
     pSold: {
         type: Number,
-        default: 0
+        default: 0,
     },
     pQuantity: {
         type: Number,
-        default: 0
+        default: 0,
     },
     pCategory: {
         type: ObjectId,
-        ref: "categories"
+        ref: "categories",
     },
     pImages: {
         type: Array,
-        required: true
+        required: true,
     },
     pOffer: {
         type: String,
-        default: null
+        default: null,
     },
+    pclick: {
+        type: Number,
+        default: 0,
+    },
+    pUserClick : [{
+        user: {
+            type: ObjectId,
+            ref: "users",
+            required: true,
+          },
+        clicked: {
+            type: Number,
+            //required: true,
+            default : 0
+      
+        },
+        lastClickedAt: {
+            type: Date,
+            //default: Date.now(),
+        },
+    }]
+    ,
     pRatingsReviews: [{
         review: String,
         user: { type: ObjectId, ref: "users" },
         rating: String,
         createdAt: {
             type: Date,
-            default: Date.now()
-        }
-    }],
+            default: Date.now(),
+        },
+    }, ],
     pStatus: {
         type: String,
-        required: true
-    }
-
-}, { timestamps: true })
+        required: true,
+    },
+}, { timestamps: true }, { autoCreate: true });
 
 const productModel = mongoose.model("products", productSchema);
 module.exports = productModel;
