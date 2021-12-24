@@ -30,7 +30,7 @@ const TableBody = ({ order }) => {
   return (
     <Fragment>
       <tr className="border-b">
-        <td className="w-48 hover:bg-gray-200 p-2 flex flex-col space-y-1">
+        <td className="w-48 hover:bg-gray-200 p-2 text-center flex flex-col space-y-1">
           {order.allProduct.map((product, i) => {
             return (
               <span className="block flex items-center space-x-2" key={i}>

@@ -118,7 +118,7 @@ const Login = (props) => {
           style={{ background: "#303031" }}
           className="font-medium px-4 py-2 text-white text-center cursor-pointer"
         >
-          Login with google
+          Login with Google
         </div>
       </form>
     </Fragment>

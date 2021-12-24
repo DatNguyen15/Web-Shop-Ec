@@ -94,3 +94,56 @@ export const pay = async (
       });
   }
 };
+
+export const payMoMo = async (
+  data,
+  dispatch,
+  state,
+  setState,
+  momoOrder,
+  totalCost,
+  history
+) => {
+  console.log(state);
+  if (!state.address) {
+    setState({ ...state, error: "Please provide your address" });
+  } else if (!state.phone) {
+    setState({ ...state, error: "Please provide your phone number" });
+  } else {
+    let paymentData = {
+      amountTotal: totalCost() + "",
+      allProduct: JSON.parse(localStorage.getItem("cart")),
+      user: JSON.parse(localStorage.getItem("jwt")).user._id,
+      //amount: inforMoMO.amount,
+      address: state.address,
+      phone: state.phone,
+    };
+    console.log("ppppppppppppppp" + paymentData.amountTotal);
+    let changeMoney = Number(paymentData.amountTotal) * 22960;
+    //alert(changeMoney);
+    if (changeMoney < 20000000) {
+      momoOrder(paymentData)
+        .then(async (res) => {
+          if (res) {
+            let inforMoMO = JSON.parse(res);
+            window.open(inforMoMO.payUrl, "_self");
+          }
+        })
+        .then(() => {
+          localStorage.setItem("cart", JSON.stringify([]));
+          dispatch({ type: "cartProduct", payload: null });
+          dispatch({ type: "cartTotalCost", payload: null });
+          //dispatch({ type: "orderSuccess", payload: true });
+          setState({ clientToken: "", instance: {} });
+          dispatch({ type: "loading", payload: false });
+          //return history.push("/");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      alert("MoMo only for payments under 1000$.");
+    }
+  }
+};
+// export const returnAfterMoMo = async (dispatch) => {};

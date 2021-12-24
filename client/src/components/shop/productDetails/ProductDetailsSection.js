@@ -1,4 +1,10 @@
-import React, { Fragment, useState, useEffect, useContext } from "react";
+import React, {
+  Fragment,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
 import { useParams } from "react-router-dom";
 import { ProductDetailsContext } from "./index";
 import { LayoutContext } from "../layout";
@@ -12,6 +18,7 @@ import { isWishReq, unWishReq, isWish } from "../home/Mixins";
 import { updateQuantity, slideImage, addToCart, cartList } from "./Mixins";
 import { totalCost } from "../partials/Mixins";
 
+import COMMANDS from "../../alanCommands";
 const apiURL = process.env.REACT_APP_API_URL;
 
 const ProductDetailsSection = (props) => {
@@ -32,6 +39,25 @@ const ProductDetailsSection = (props) => {
     JSON.parse(localStorage.getItem("wishList"))
   ); // Wishlist State Control
 
+  // Alan Function
+  const AddProductAlan = useCallback(({ detail: commandData }) => {
+    addToCart(
+      sProduct._id,
+      commandData.data,
+      sProduct.pPrice,
+      layoutDispatch,
+      setQuantitiy,
+      setAlertq,
+      fetchData,
+      totalCost
+    );
+  });
+  useEffect(() => {
+    window.addEventListener(COMMANDS.ADD_TO_CART, AddProductAlan);
+    return () => {
+      window.removeEventListener(COMMANDS.ADD_TO_CART, AddProductAlan);
+    };
+  }, [AddProductAlan]);
   useEffect(() => {
     fetchData();
   }, []);

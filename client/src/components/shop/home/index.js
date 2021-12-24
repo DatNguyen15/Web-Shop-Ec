@@ -36,9 +36,10 @@ const HomeComponent = () => {
             padding: "10px",
             background: "black",
             color: "whitesmoke",
+            textAlign: "center",
           }}
         >
-          Suggestion For You.
+          Recommend
         </h1>
       </section>
       <section className="m-4 md:mx-8 md:my-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

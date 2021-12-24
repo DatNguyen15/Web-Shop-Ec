@@ -30,3 +30,20 @@ export const createOrder = async (orderData) => {
     console.log(error);
   }
 };
+
+export const momoOrder = async (paymentData) => {
+  try {
+    let res = await axios.post(`${apiURL}/api/momo/momo/payment`, paymentData);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getStatusMoMo = async () => {
+  try {
+    let res = await axios.post(`${apiURL}/api/momo/successfull`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -102,7 +102,7 @@ class Order {
           bodyMail +=
             '<td align="center" bgcolor="#f4f4f4" style="height:150px;border:1px solid #cccccc">';
           bodyMail +=
-            '<img src="https://scontent.fsgn8-1.fna.fbcdn.net/v/t39.30808-6/260062268_425632765860169_7048143686936409600_n.jpg?_nc_cat=102&ccb=1-5&_nc_sid=730e14&_nc_ohc=QA7vmEa-cC0AX92jezx&_nc_ht=scontent.fsgn8-1.fna&oh=6250807910831c4f44f94816a044c698&oe=61B551E4" alt="hdshop.com" width="100%" height="140%" style="display:block" class="CToWUd">';
+            '<img src="https://thanhdatat.surge.sh/src/img/tempsnip2.png" alt="hdshop.com" width="100%" height="140%" style="display:block" class="CToWUd">';
           bodyMail += "</td>";
           bodyMail += "</tr>";
 
@@ -252,6 +252,169 @@ class Order {
         console.log(error);
       }
     }
+  }
+  async updateOrderMoMo(req, res) {
+    let orderId = req.query.orderId;
+    let resultCode = req.query.resultCode;
+    console.log(resultCode);
+
+    if (resultCode == "0") {
+      let infoOrder = await orderModel
+        .findById(orderId)
+        .populate("allProduct.id", "pName pImages pPrice")
+        .populate("user", "name email");
+      console.log("Infor:", infoOrder.allProduct[0].id.pName);
+      console.log("infor", infoOrder.user.name);
+
+      var lengthPro = infoOrder.allProduct.length;
+      var contentProduct = "";
+      for (let i = 0; i < lengthPro; i++) {
+        var totalPrice =
+          infoOrder.allProduct[i].id.pPrice * infoOrder.allProduct[i].quantitiy;
+        contentProduct += `<tr>
+      <td align="center" valign="middle" rowspan="1">${i + 1}</td>
+      <td>
+
+        <p><strong >
+        ${infoOrder.allProduct[i].id.pName}
+        </strong></p>
+      </td>
+      <td align="center">${infoOrder.allProduct[i].quantitiy}</td>
+      <td align="center">${infoOrder.allProduct[i].id.pPrice}$</td>
+      <td align="center">${totalPrice}$</td>
+      </tr>`;
+      }
+
+      var bodyMail = "";
+
+      bodyMail +=
+        '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse:collapse;border:1px solid #cccccc">';
+      bodyMail += "<tbody><tr>";
+      bodyMail +=
+        '<td align="center" bgcolor="#f4f4f4" style="height:150px;border:1px solid #cccccc">';
+      bodyMail +=
+        '<img src="https://thanhdatat.surge.sh/src/img/tempsnip2.png" alt="hdshop.com" width="100%" height="140%" style="display:block" class="CToWUd">';
+      bodyMail += "</td>";
+      bodyMail += "</tr>";
+
+      bodyMail += "<tr>";
+      bodyMail += '<td bgcolor="#ffffff" style="padding:40px 30px 40px 30px">';
+
+      bodyMail +=
+        '<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;font-family:Arial,sans-serif">';
+      bodyMail += "<tbody><tr>";
+      bodyMail += '<td style="color:#00483d;font-family:Arial,sans-serif">';
+      bodyMail +=
+        '<h1  align="center" style="font-size:24px;margin:10px 0">ORDER INFORMATION NO <strong style="color:red">' +
+        infoOrder.transactionId.toUpperCase() +
+        "</strong></h1>";
+      bodyMail += "</td>";
+      bodyMail += "</tr>";
+      bodyMail += "<tr>";
+      bodyMail += '<td style="color:#00483d;font-family:Arial,sans-serif">';
+      bodyMail +=
+        '<h2 style="font-size:20px;margin:10px 0">1. Customer Information</h2>';
+      bodyMail += "</td>";
+      bodyMail += "</tr>";
+      bodyMail += "<tr>";
+      bodyMail += "<td>";
+      bodyMail +=
+        '<table border="0" cellpadding="6" cellspacing="0" width="100%" style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px">';
+      bodyMail += '<tbody><tr style="border-bottom:1px dotted #ccc">';
+      bodyMail += '<td style="width:110px">Name:</td>';
+      bodyMail += "<td>" + infoOrder.user.name + "</td>";
+      bodyMail += "</tr>";
+      bodyMail += '<tr style="border-bottom:1px dotted #ccc">';
+      bodyMail += "<td>Phone:</td>";
+      bodyMail += "<td>" + infoOrder.phone + "</td>";
+      bodyMail += "</tr>";
+      bodyMail += '<tr style="border-bottom:1px dotted #ccc">';
+      bodyMail += "<td>Email:</td>";
+      bodyMail +=
+        '<td><a href="mailto:' +
+        infoOrder.user.email +
+        '" target="_blank">' +
+        infoOrder.user.email +
+        "</a></td>";
+      bodyMail += "</tr>";
+      bodyMail += '<tr style="border-bottom:1px dotted #ccc">';
+      bodyMail += "<td>Address:</td>";
+      bodyMail += "<td>" + infoOrder.address + "</td>";
+      bodyMail += "</tr>";
+
+      bodyMail += '<tr style="border-bottom:1px dotted #ccc">';
+      bodyMail += "<td>Note:</td>";
+      bodyMail += "<td></td>";
+      bodyMail += "</tr>";
+      bodyMail += "</tbody></table>";
+      bodyMail += "</td>";
+      bodyMail += "</tr>";
+
+      bodyMail += "<tr>";
+      bodyMail += '<td style="color:#153643;font-family:Arial,sans-serif">';
+      bodyMail +=
+        '<h2 style="font-size:20px;margin:10px 0">2. Ordered Products</h2>';
+      bodyMail += "</td>";
+      bodyMail += "</tr>";
+
+      bodyMail += "<tr>";
+      bodyMail += "<td>";
+      bodyMail +=
+        '<table border="1" cellpadding="6" cellspacing="0" width="100%" style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px">';
+      bodyMail += "<tbody><tr>";
+      bodyMail += "<th>#</th>";
+      bodyMail += "<th>Product Name</th>";
+      bodyMail += "<th>Quantity</th>";
+      bodyMail += "<th>Price</th>";
+      bodyMail += "<th>Total (QxP)</th>";
+      bodyMail += "</tr>";
+      bodyMail += contentProduct;
+      bodyMail += "<tr>";
+      bodyMail += '<td colspan="4" align="right">Total:</td>';
+      bodyMail += "<td align='center'>" + infoOrder.amount + "$</td>";
+      bodyMail += "</tr>";
+      bodyMail += "<tr>";
+      bodyMail += '<td colspan="4" align="right">Discount:</td>';
+      bodyMail += "<td align='center'>-00 $</td>";
+      bodyMail += "</tr>";
+      bodyMail += "<tr>";
+      bodyMail += '<td  colspan="4" align="right">Total Payment:</td>';
+      bodyMail +=
+        "<td align='center'><strong style='color:red'>" +
+        infoOrder.amount +
+        "$</strong></td>";
+      bodyMail += "</tr>";
+      bodyMail += "</tbody></table>";
+      bodyMail += "</td>";
+      bodyMail += "</tr>";
+
+      bodyMail += "<tr>";
+      bodyMail +=
+        '<td style="padding:10px 0;font-family:Arial,sans-serif;font-size:14px">';
+      bodyMail +=
+        "<p>Thank you for your order. Orders are being received and are pending.</p>";
+      bodyMail += "</td>";
+      bodyMail += "</tr>";
+      bodyMail += "</tbody></table>";
+
+      const mailer = new EmailService();
+      mailer.sendMail(
+        process.env.EMAIL,
+        infoOrder.user.email,
+        `[HDSHOP] Order Information No: ${infoOrder.transactionId.toUpperCase()}`,
+        bodyMail
+      );
+      //return res.redirect("http://localhost:8000/api/momo/successfull");
+      return res.redirect("http://localhost:3000");
+    } else {
+      let deleteOrder = await orderModel.findByIdAndDelete(orderId);
+      if (deleteOrder) {
+        return res.redirect("http://localhost:3000/checkout");
+      }
+    }
+  }
+  async successMoMo(req, res) {
+    return res.json({ message: "Order successfull" });
   }
 }
 

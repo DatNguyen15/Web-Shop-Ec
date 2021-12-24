@@ -1,10 +1,18 @@
-import React, { Fragment, useState, useEffect, useContext } from "react";
+import React, {
+  Fragment,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
 import { useHistory } from "react-router-dom";
 import { getAllProduct, postClick } from "../../admin/products/FetchApi";
 import { HomeContext } from "./index";
 import { isAuthenticate } from "../auth/fetchApi";
 import { isWishReq, unWishReq, isWish } from "./Mixins";
 import "../../dist/css/card.css";
+import COMMANDS from "../../alanCommands";
+
 const apiURL = process.env.REACT_APP_API_URL;
 
 const SingleProduct = (props) => {
@@ -24,10 +32,31 @@ const SingleProduct = (props) => {
   const [wList, setWlist] = useState(
     JSON.parse(localStorage.getItem("wishList"))
   );
-
+  // Alan Function
+  const detailProductAlan = useCallback(({ detail: commandData }) => {
+    console.log(commandData);
+    console.log(products);
+    var productUserAdd = commandData.data;
+    var resultProduct = data.products.find(
+      (item) => item.pName.toLowerCase() == productUserAdd.toLowerCase()
+    );
+    if (resultProduct) {
+      console.log({ resultProduct });
+      history.push(`/products/${resultProduct._id}`);
+    } else {
+      alert(`${productUserAdd} Not Found`);
+    }
+  });
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    window.addEventListener(COMMANDS.PRODUCT_DETAIL, detailProductAlan);
+    return () => {
+      window.removeEventListener(COMMANDS.PRODUCT_DETAIL, detailProductAlan);
+    };
+  }, [detailProductAlan]);
 
   const fetchData = async () => {
     dispatch({ type: "loading", payload: true });

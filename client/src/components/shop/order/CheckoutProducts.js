@@ -4,8 +4,8 @@ import { LayoutContext } from "../layout";
 import { subTotal, quantity, totalCost } from "../partials/Mixins";
 
 import { cartListProduct } from "../partials/FetchApi";
-import { getBrainTreeToken, getPaymentProcess } from "./FetchApi";
-import { fetchData, fetchbrainTree, pay } from "./Action";
+import { getBrainTreeToken, getPaymentProcess, momoOrder } from "./FetchApi";
+import { fetchData, fetchbrainTree, pay, payMoMo } from "./Action";
 
 import DropIn from "braintree-web-drop-in-react";
 
@@ -23,7 +23,6 @@ export const CheckoutComponent = (props) => {
     clientToken: null,
     instance: {},
   });
-
   useEffect(() => {
     fetchData(cartListProduct, dispatch);
     fetchbrainTree(getBrainTreeToken, setState);
@@ -46,7 +45,7 @@ export const CheckoutComponent = (props) => {
             d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
           ></path>
         </svg>
-        Please wait untill finish 
+        Please wait untill finish
       </div>
     );
   }
@@ -136,6 +135,24 @@ export const CheckoutComponent = (props) => {
                     style={{ background: "#303031" }}
                   >
                     Pay now
+                  </div>
+                  <div
+                    //onClick={paymentMoMo}
+                    onClick={(e) =>
+                      payMoMo(
+                        data,
+                        dispatch,
+                        state,
+                        setState,
+                        momoOrder,
+                        totalCost,
+                        history
+                      )
+                    }
+                    className="w-full px-4 py-2 text-center text-white font-semibold cursor-pointer"
+                    style={{ background: "#C71585" }}
+                  >
+                    Pay with MoMo
                   </div>
                 </div>
               </Fragment>

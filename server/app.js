@@ -33,7 +33,7 @@ const brainTreeRouter = require("./routes/braintree");
 const orderRouter = require("./routes/orders");
 const usersRouter = require("./routes/users");
 const customizeRouter = require("./routes/customize");
-
+const momoRouter = require("./routes/momo");
 // Import Auth middleware for check user login or not~
 const { loginCheck } = require("./middleware/auth");
 
@@ -68,6 +68,7 @@ app.use("/api/category", categoryRouter);
 app.use("/api/product", productRouter);
 app.use("/api", brainTreeRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/momo", momoRouter);
 app.use("/api/customize", customizeRouter);
 
 // Run Server

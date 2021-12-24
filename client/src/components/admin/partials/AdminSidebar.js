@@ -121,7 +121,7 @@ const AdminSidebar = (props) => {
         </div>
         <hr className="border-b border-gray-200" />
 
-        <div
+        {/* <div
           onClick={(e) => history.push("/admin/dashboard/users")}
           className={`${
             location.pathname === "/admin/dashboard/users"
@@ -147,7 +147,7 @@ const AdminSidebar = (props) => {
           </span>
           <span className="hover:text-gray-800">Users</span>
         </div>
-        <hr className="border-b border-gray-200" />
+        <hr className="border-b border-gray-200" /> */}
       </div>
     </Fragment>
   );

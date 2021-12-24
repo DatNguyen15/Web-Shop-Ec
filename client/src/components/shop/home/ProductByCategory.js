@@ -1,10 +1,11 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useCallback } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import Layout from "../layout";
 import "../../dist/css/card.css";
 //import { getAllProduct, postClick } from "../../admin/products/FetchApi";
 import { productByCategory, postClick } from "../../admin/products/FetchApi";
 import { isAuthenticate } from "../auth/fetchApi";
+import COMMANDS from "../../alanCommands";
 
 const apiURL = process.env.REACT_APP_API_URL;
 
@@ -60,7 +61,28 @@ const AllProduct = ({ products }) => {
     postClick(formData);
     history.push(`/products/${id}`);
   };
-  console.log("asdfasd", products);
+
+  // Alan Function
+  const detailProductAlan = useCallback(({ detail: commandData }) => {
+    console.log(commandData);
+    console.log(products);
+    var productUserAdd = commandData.data;
+    var resultProduct = products.find(
+      (item) => item.pName.toLowerCase() == productUserAdd.toLowerCase()
+    );
+    if (resultProduct) {
+      console.log({ resultProduct });
+      history.push(`/products/${resultProduct._id}`);
+    } else {
+      alert(`${productUserAdd} Not Found`);
+    }
+  });
+  useEffect(() => {
+    window.addEventListener(COMMANDS.PRODUCT_DETAIL, detailProductAlan);
+    return () => {
+      window.removeEventListener(COMMANDS.PRODUCT_DETAIL, detailProductAlan);
+    };
+  }, [detailProductAlan]);
   const category =
     products && products.length > 0 ? products[0].pCategory.cName : "";
 

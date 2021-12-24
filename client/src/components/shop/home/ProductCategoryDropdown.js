@@ -1,10 +1,17 @@
-import React, { Fragment, useContext, useState, useEffect } from "react";
+import React, {
+  Fragment,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { useHistory } from "react-router-dom";
 import { HomeContext } from "./index";
 import { getAllCategory } from "../../admin/categories/FetchApi";
 import { getAllProduct, productByPrice } from "../../admin/products/FetchApi";
 import "./style.css";
 import { deleteReview } from "./../productDetails/Action";
+import COMMANDS from "../../alanCommands";
 
 const apiURL = process.env.REACT_APP_API_URL;
 
@@ -174,7 +181,21 @@ const Search = () => {
   const { data, dispatch } = useContext(HomeContext);
   const [search, setSearch] = useState("");
   const [productArray, setPa] = useState(null);
-
+  const SearchProductAlan = useCallback(({ detail: commandData }) => {
+    setSearch(commandData.data);
+    fetchData();
+    dispatch({
+      type: "searchHandleInReducer",
+      payload: commandData.data,
+      productArray: productArray,
+    });
+  });
+  useEffect(() => {
+    window.addEventListener(COMMANDS.SEARCH_PRODUCT, SearchProductAlan);
+    return () => {
+      window.removeEventListener(COMMANDS.SEARCH_PRODUCT, SearchProductAlan);
+    };
+  }, [SearchProductAlan]);
   const searchHandle = (e) => {
     setSearch(e.target.value);
     fetchData();

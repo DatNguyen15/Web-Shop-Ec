@@ -1,10 +1,11 @@
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useCallback, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { LayoutContext } from "../index";
 import { cartListProduct } from "./FetchApi";
 import { isAuthenticate } from "../auth/fetchApi";
 import { cartList } from "../productDetails/Mixins";
 import { subTotal, quantity, totalCost } from "./Mixins";
+import COMMANDS from "../../alanCommands";
 
 const apiURL = process.env.REACT_APP_API_URL;
 
@@ -16,6 +17,24 @@ const CartModal = (props) => {
 
   const cartModalOpen = () =>
     dispatch({ type: "cartModalToggle", payload: !data.cartModal });
+
+  const removeProductInCartAlan = useCallback(({ detail: commandData }) => {
+    var productToAlan = commandData.data;
+    var productCart = products.find(
+      (item) => item.pName.toLowerCase() == productToAlan.toLowerCase()
+    );
+    if (!productCart) {
+      alert(`Product ${productToAlan} not found`);
+    } else {
+      removeCartProduct(productCart._id);
+    }
+  });
+  useEffect(() => {
+    window.addEventListener(COMMANDS.REMOVE_PRODUCT, removeProductInCartAlan);
+    return () => {
+      window.removeEventListener(COMMANDS.REMOVE_PRODUCT, removeProductInCartAlan);
+    };
+  }, [removeProductInCartAlan]);
 
   useEffect(() => {
     fetchData();
