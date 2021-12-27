@@ -292,7 +292,7 @@ class Product {
     } else {
       try {
         let products = await productModel
-          .find({ pPrice: { $lt: price } })
+          .find({ pPrice: { $lte: price } })
           .populate("pCategory", "cName")
           .sort({ pPrice: -1 });
         if (products) {

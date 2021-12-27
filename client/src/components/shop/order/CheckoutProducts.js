@@ -52,11 +52,15 @@ export const CheckoutComponent = (props) => {
   return (
     <Fragment>
       <section className="mx-4 mt-20 md:mx-12 md:mt-32 lg:mt-24">
-        <div className="text-2xl mx-2">Order</div>
+        <div className="text-2xl mx-2 hover:text-yellow-700">Order</div>
         {/* Product List */}
         <div className="flex flex-col md:flex md:space-x-2 md:flex-row">
           <div className="md:w-1/2">
             <CheckoutProducts products={data.cartProduct} />
+            <div style={{ textAlign: "center" }} className="text-xl mt-2">
+              Total:{" "}
+              <span className="text-red-600 font-medium">${totalCost()}</span>
+            </div>
           </div>
           <div className="w-full order-first md:order-last md:w-1/2">
             {state.clientToken !== null ? (
@@ -132,9 +136,18 @@ export const CheckoutComponent = (props) => {
                       )
                     }
                     className="w-full px-4 py-2 text-center text-white font-semibold cursor-pointer"
-                    style={{ background: "#303031" }}
+                    style={{
+                      background: "rgb(18 110 170)",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
                   >
-                    Pay now
+                    <img
+                      style={{ background: "white", borderRadius: "5px" }}
+                      src="https://www.paypalobjects.com/webstatic/icon/pp32.png"
+                    ></img>
+                    <span className="p-2">Pay with PayPal/Card</span>
                   </div>
                   <div
                     //onClick={paymentMoMo}
@@ -150,9 +163,23 @@ export const CheckoutComponent = (props) => {
                       )
                     }
                     className="w-full px-4 py-2 text-center text-white font-semibold cursor-pointer"
-                    style={{ background: "#C71585" }}
+                    style={{
+                      background: "#C71585",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
                   >
-                    Pay with MoMo
+                    <img
+                      style={{
+                        background: "white",
+                        borderRadius: "5px",
+                        width: "32px",
+                        height: "32px",
+                      }}
+                      src="https://developers.momo.vn/v3/vi/img/logo.svg"
+                    ></img>
+                    <span className="p-2">Pay with MoMo</span>
                   </div>
                 </div>
               </Fragment>

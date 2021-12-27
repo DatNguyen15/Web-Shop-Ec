@@ -129,15 +129,6 @@ export const payMoMo = async (
             window.open(inforMoMO.payUrl, "_self");
           }
         })
-        .then(() => {
-          localStorage.setItem("cart", JSON.stringify([]));
-          dispatch({ type: "cartProduct", payload: null });
-          dispatch({ type: "cartTotalCost", payload: null });
-          //dispatch({ type: "orderSuccess", payload: true });
-          setState({ clientToken: "", instance: {} });
-          dispatch({ type: "loading", payload: false });
-          //return history.push("/");
-        })
         .catch((err) => {
           console.log(err);
         });

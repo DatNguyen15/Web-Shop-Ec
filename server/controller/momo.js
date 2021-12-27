@@ -1,4 +1,5 @@
 require("dotenv").config();
+const currency = require("node-currency");
 const productModel = require("../models/products");
 const orderModel = require("../models/orders");
 const crypto = require("crypto");
@@ -9,7 +10,10 @@ const MoMo = async (request, response) => {
   console.log("sản phẩm", allProduct);
   var mongoose = require("mongoose");
   var id = mongoose.Types.ObjectId();
-  let amountVND = Number(amountTotal) * 22960 + "";
+  const exchangeRate = await currency.getCurrency("usd-vnd");
+  console.log("tỷ giá:", Number(exchangeRate.lastValue));
+  let amountVND = Number(amountTotal) * Number(exchangeRate.lastValue) + "";
+  console.log("tiền sau khi đổi" + amountVND);
   let productMoMo = [];
 
   for (let i = 0; i < allProduct.length; i++) {
@@ -34,8 +38,8 @@ const MoMo = async (request, response) => {
   var redirectUrl = "http://localhost:8000/api/momo/momocalback";
   var ipnUrl = "https://callback.url/notify";
   // var ipnUrl = redirectUrl = "https://webhook.site/454e7b77-f177-4ece-8236-ddf1c26ba7f8";
-  //var amount = amountVND;
-  var amount = "1000";
+  var amount = amountVND;
+  //var amount = "1000";
   var requestType = "captureWallet";
   var extraData = ""; //pass empty value if your merchant does not have stores
 

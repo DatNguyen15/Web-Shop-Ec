@@ -34,7 +34,6 @@ const orderSchema = new mongoose.Schema(
       type: String,
       default: "Not processed",
       enum: [
-        "OrderMoMo",
         "Not processed",
         "Processing",
         "Shipped",

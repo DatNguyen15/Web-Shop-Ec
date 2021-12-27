@@ -50,7 +50,10 @@ const CategoryList = () => {
                   className="col-span-1 m-2 flex flex-col items-center justify-center space-y-2 cursor-pointer"
                 >
                   <div className="row">
-                    <div className="col-2" style={{ textAlign: "center" }}>
+                    <div
+                      className="col-2 hover:text-red-700"
+                      style={{ textAlign: "center" }}
+                    >
                       <div
                         style={{
                           display: "flex",

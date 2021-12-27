@@ -405,7 +405,7 @@ class Order {
         bodyMail
       );
       //return res.redirect("http://localhost:8000/api/momo/successfull");
-      return res.redirect("http://localhost:3000");
+      return res.redirect("http://localhost:3000/paymentsucess");
     } else {
       let deleteOrder = await orderModel.findByIdAndDelete(orderId);
       if (deleteOrder) {
