@@ -1,5 +1,6 @@
 const EmailService = require("../config/EmailService");
 const orderModel = require("../models/orders");
+const productModel = require("../models/products");
 const userModel = require("../models/users");
 
 class Order {
@@ -69,17 +70,19 @@ class Order {
         if (save) {
           let infoOrder = await orderModel
             .findById(save._id)
-            .populate("allProduct.id", "pName pImages pPrice")
+            .populate("allProduct.id", "pName pImages pPrice pOffer")
             .populate("user", "name email");
-          console.log("Infor:", infoOrder.allProduct[0].id.pName);
+          console.log("Infor offer:", infoOrder.allProduct[0].id.pOffer);
           console.log("infor", infoOrder.user.name);
 
           var lengthPro = infoOrder.allProduct.length;
           var contentProduct = "";
           for (let i = 0; i < lengthPro; i++) {
             var totalPrice =
-              infoOrder.allProduct[i].id.pPrice *
-              infoOrder.allProduct[i].quantitiy;
+              infoOrder.allProduct[i].quantitiy *
+              (infoOrder.allProduct[i].id.pPrice -
+                infoOrder.allProduct[i].id.pPrice *
+                  (infoOrder.allProduct[i].id.pOffer / 100));
             contentProduct += `<tr>
           <td align="center" valign="middle" rowspan="1">${i + 1}</td>
           <td>
@@ -90,6 +93,7 @@ class Order {
           </td>
           <td align="center">${infoOrder.allProduct[i].quantitiy}</td>
           <td align="center">${infoOrder.allProduct[i].id.pPrice}$</td>
+          <td align="center">-${infoOrder.allProduct[i].id.pOffer}%</td>
           <td align="center">${totalPrice}$</td>
           </tr>`;
           }
@@ -176,19 +180,16 @@ class Order {
           bodyMail += "<th>Product Name</th>";
           bodyMail += "<th>Quantity</th>";
           bodyMail += "<th>Price</th>";
+          bodyMail += "<th>Offer</th>";
           bodyMail += "<th>Total (QxP)</th>";
           bodyMail += "</tr>";
           bodyMail += contentProduct;
           bodyMail += "<tr>";
-          bodyMail += '<td colspan="4" align="right">Total:</td>';
+          bodyMail += '<td colspan="5" align="right">Total:</td>';
           bodyMail += "<td align='center'>" + infoOrder.amount + "$</td>";
           bodyMail += "</tr>";
           bodyMail += "<tr>";
-          bodyMail += '<td colspan="4" align="right">Discount:</td>';
-          bodyMail += "<td align='center'>-00 $</td>";
-          bodyMail += "</tr>";
-          bodyMail += "<tr>";
-          bodyMail += '<td  colspan="4" align="right">Total Payment:</td>';
+          bodyMail += '<td  colspan="5" align="right">Total Payment:</td>';
           bodyMail +=
             "<td align='center'><strong style='color:red'>" +
             infoOrder.amount +
@@ -261,28 +262,32 @@ class Order {
     if (resultCode == "0") {
       let infoOrder = await orderModel
         .findById(orderId)
-        .populate("allProduct.id", "pName pImages pPrice")
+        .populate("allProduct.id", "pName pImages pPrice pOffer")
         .populate("user", "name email");
-      console.log("Infor:", infoOrder.allProduct[0].id.pName);
+      console.log("Infor offer:", infoOrder.allProduct[0].id.pOffer);
       console.log("infor", infoOrder.user.name);
 
       var lengthPro = infoOrder.allProduct.length;
       var contentProduct = "";
       for (let i = 0; i < lengthPro; i++) {
         var totalPrice =
-          infoOrder.allProduct[i].id.pPrice * infoOrder.allProduct[i].quantitiy;
+          infoOrder.allProduct[i].quantitiy *
+          (infoOrder.allProduct[i].id.pPrice -
+            infoOrder.allProduct[i].id.pPrice *
+              (infoOrder.allProduct[i].id.pOffer / 100));
         contentProduct += `<tr>
-      <td align="center" valign="middle" rowspan="1">${i + 1}</td>
-      <td>
+          <td align="center" valign="middle" rowspan="1">${i + 1}</td>
+          <td>
 
-        <p><strong >
-        ${infoOrder.allProduct[i].id.pName}
-        </strong></p>
-      </td>
-      <td align="center">${infoOrder.allProduct[i].quantitiy}</td>
-      <td align="center">${infoOrder.allProduct[i].id.pPrice}$</td>
-      <td align="center">${totalPrice}$</td>
-      </tr>`;
+            <p><strong >
+            ${infoOrder.allProduct[i].id.pName}
+            </strong></p>
+          </td>
+          <td align="center">${infoOrder.allProduct[i].quantitiy}</td>
+          <td align="center">${infoOrder.allProduct[i].id.pPrice}$</td>
+          <td align="center">-${infoOrder.allProduct[i].id.pOffer}%</td>
+          <td align="center">${totalPrice}$</td>
+          </tr>`;
       }
 
       var bodyMail = "";
@@ -366,19 +371,16 @@ class Order {
       bodyMail += "<th>Product Name</th>";
       bodyMail += "<th>Quantity</th>";
       bodyMail += "<th>Price</th>";
+      bodyMail += "<th>Offer</th>";
       bodyMail += "<th>Total (QxP)</th>";
       bodyMail += "</tr>";
       bodyMail += contentProduct;
       bodyMail += "<tr>";
-      bodyMail += '<td colspan="4" align="right">Total:</td>';
+      bodyMail += '<td colspan="5" align="right">Total:</td>';
       bodyMail += "<td align='center'>" + infoOrder.amount + "$</td>";
       bodyMail += "</tr>";
       bodyMail += "<tr>";
-      bodyMail += '<td colspan="4" align="right">Discount:</td>';
-      bodyMail += "<td align='center'>-00 $</td>";
-      bodyMail += "</tr>";
-      bodyMail += "<tr>";
-      bodyMail += '<td  colspan="4" align="right">Total Payment:</td>';
+      bodyMail += '<td  colspan="5" align="right">Total Payment:</td>';
       bodyMail +=
         "<td align='center'><strong style='color:red'>" +
         infoOrder.amount +

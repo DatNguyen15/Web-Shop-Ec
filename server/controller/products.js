@@ -425,6 +425,28 @@ class Product {
     }
   }
 
+  async decreaseQuantity(req, res, next) {
+    let bulkOps = req.body.allProduct.map((item) => {
+      return {
+        updateOne: {
+          filter: { _id: item.id },
+          update: {
+            $inc: { pQuantity: -item.quantitiy, pSold: +item.quantitiy },
+          },
+        },
+      };
+    });
+
+    productModel.bulkWrite(bulkOps, {}, (error, products) => {
+      if (error) {
+        return res.status(400).json({
+          error: "Could not update product",
+        });
+      }
+      next();
+    });
+  }
+
   async getProductClickByUser(req, res) {
     let { uId } = req.params;
     //console.log(req.params);

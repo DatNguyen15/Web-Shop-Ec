@@ -40,17 +40,23 @@ const ProductDetailsSection = (props) => {
   ); // Wishlist State Control
 
   // Alan Function
+  const [alanInstance, setAlanInstance] = useState();
   const AddProductAlan = useCallback(({ detail: commandData }) => {
-    addToCart(
-      sProduct._id,
-      commandData.data,
-      sProduct.pPrice,
-      layoutDispatch,
-      setQuantitiy,
-      setAlertq,
-      fetchData,
-      totalCost
-    );
+    if (commandData.data > sProduct.pQuantity) {
+      alert(`Limit quantity of product is ${sProduct.pQuantity}`);
+    } else {
+      addToCart(
+        sProduct._id,
+        commandData.data,
+        sProduct.pPrice,
+        sProduct.pOffer,
+        layoutDispatch,
+        setQuantitiy,
+        setAlertq,
+        fetchData,
+        totalCost
+      );
+    }
   });
   useEffect(() => {
     window.addEventListener(COMMANDS.ADD_TO_CART, AddProductAlan);
@@ -199,11 +205,46 @@ const ProductDetailsSection = (props) => {
           </div>
           <div className="col-span-2 mt-8 md:mt-0 md:col-span-4 md:ml-6 lg:ml-12">
             <div className="flex flex-col leading-8">
-              <div className="text-2xl tracking-wider">{sProduct.pName}</div>
+              {Number(sProduct.pOffer) > 0 ? (
+                <div className="flex flex-start">
+                  <div className="text-2xl tracking-wider">
+                    {sProduct.pName}
+                  </div>
+                  <sub
+                    style={{ fontWeight: "bold" }}
+                    className="text-md tracking-wider pl-3 text-red-700 italic"
+                  >
+                    (-{sProduct.pOffer}%)
+                  </sub>
+                </div>
+              ) : (
+                <div className="text-2xl tracking-wider">{sProduct.pName}</div>
+              )}
+
               <div className="flex justify-between items-center">
-                <span className="text-xl tracking-wider text-yellow-700">
+                {Number(sProduct.pOffer) > 0 ? (
+                  <div>
+                    <span className="text-lg tracking-wider text-yellow-700 line-through italic">
+                      ${sProduct.pPrice}
+                    </span>
+                    <span className="text-xl tracking-wider text-yellow-700">
+                      {" "}
+                      -{" "}
+                    </span>
+                    <span className="text-xl tracking-wider text-red-700">
+                      $
+                      {sProduct.pPrice -
+                        (sProduct.pPrice * sProduct.pOffer) / 100}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-xl tracking-wider text-yellow-700">
+                    ${sProduct.pPrice}.00
+                  </span>
+                )}
+                {/* <span className="text-xl tracking-wider text-yellow-700">
                   ${sProduct.pPrice}.00
-                </span>
+                </span> */}
                 <span>
                   <svg
                     onClick={(e) => isWishReq(e, sProduct._id, setWlist)}
@@ -411,6 +452,7 @@ const ProductDetailsSection = (props) => {
                           sProduct._id,
                           quantitiy,
                           sProduct.pPrice,
+                          sProduct.pOffer,
                           layoutDispatch,
                           setQuantitiy,
                           setAlertq,

@@ -65,6 +65,7 @@ export const addToCart = (
   id,
   quantitiy,
   price,
+  offer,
   layoutDispatch,
   setQuantitiy,
   setAlertq,
@@ -82,11 +83,11 @@ export const addToCart = (
       }
     });
     if (!isObj) {
-      cart.push({ id, quantitiy, price });
+      cart.push({ id, quantitiy, price, offer });
       localStorage.setItem("cart", JSON.stringify(cart));
     }
   } else {
-    cart.push({ id, quantitiy, price });
+    cart.push({ id, quantitiy, price, offer });
     localStorage.setItem("cart", JSON.stringify(cart));
   }
   layoutDispatch({ type: "inCart", payload: cartList() });

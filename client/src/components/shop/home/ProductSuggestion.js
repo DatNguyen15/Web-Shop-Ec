@@ -125,7 +125,16 @@ const ProductSuggestion = (props) => {
                       </span>
                     </div>
                   </div>
-                  <div className="p-3">${item.pPrice}.00</div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div className="p-3">${item.pPrice}.00</div>
+                    <div className="p-3 text-red-700">-{item.pOffer}%</div>
+                  </div>
                   {/* WhisList Logic  */}
                   <div className="absolute top-0 right-0 mx-2 my-2 md:mx-4">
                     <svg
