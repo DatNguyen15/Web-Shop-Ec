@@ -28,12 +28,14 @@ const AllCategory = (props) => {
   };
 
   const deleteCategoryReq = async (cId) => {
-    let deleteC = await deleteCategory(cId);
-    if (deleteC.error) {
-      console.log(deleteC.error);
-    } else if (deleteC.success) {
-      console.log(deleteC.success);
-      fetchData();
+    if (window.confirm("Are you want to delete!!!") === true) {
+      let deleteC = await deleteCategory(cId);
+      if (deleteC.error) {
+        alert(deleteC.error);
+      } else if (deleteC.success) {
+        console.log(deleteC.success);
+        fetchData();
+      }
     }
   };
 

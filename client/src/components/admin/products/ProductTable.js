@@ -30,12 +30,15 @@ const AllProduct = (props) => {
   };
 
   const deleteProductReq = async (pId) => {
-    let deleteC = await deleteProduct(pId);
-    if (deleteC.error) {
-      console.log(deleteC.error);
-    } else if (deleteC.success) {
-      console.log(deleteC.success);
-      fetchData();
+    if (window.confirm("Are you want delete product !!!") == true) {
+      let deleteC = await deleteProduct(pId);
+      if (deleteC.error) {
+        //console.log(deleteC.error);
+        alert(deleteC.error);
+      } else if (deleteC.success) {
+        console.log(deleteC.success);
+        fetchData();
+      }
     }
   };
 

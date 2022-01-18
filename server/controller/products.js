@@ -1,4 +1,5 @@
 const productModel = require("../models/products");
+const orderModel = require("../models/orders");
 const Model = require("../models/products");
 const fs = require("fs");
 const path = require("path");
@@ -165,9 +166,22 @@ class Product {
 
   async getDeleteProduct(req, res) {
     let { pId } = req.body;
+    console.log(pId);
+    let order = await orderModel.aggregate([{ $unwind: "$allProduct" }]);
+
+    let orderProduct = order.filter((val) => {
+      //console.log("order ne:", val.allProduct.id);
+      return val.allProduct.id == pId;
+    });
+    //console.log(orderProduct);
     if (!pId) {
       return res.json({ error: "All filled must be required" });
+    } else if (orderProduct.length !== 0) {
+      return res.json({
+        error: "Product has been ordered. You can edit the product's status!!!",
+      });
     } else {
+      //return res.json({ error: "You don't have a order" });
       try {
         let deleteProductObj = await productModel.findById(pId);
         let deleteProduct = await productModel.findByIdAndDelete(pId);
@@ -306,7 +320,7 @@ class Product {
 
   async getWishProduct(req, res) {
     let { productArray } = req.body;
-    if (productArray.length === 0) {
+    if (productArray === null) {
       return res.json({ error: "All filled must be required" });
     } else {
       try {
@@ -453,9 +467,9 @@ class Product {
     //let uId = "606962dd3fc23d5a9cdd1de6";
     console.log("test" + uId);
     let Products = [];
-    if (!uId) {
+    if (uId === "eeeeeeee") {
       let NewProductsNo = await productModel
-        .find({})
+        .find({ pStatus: "Active" })
         .limit(4)
         .sort({ createdAt: -1 });
       Products = [...NewProductsNo];
@@ -478,7 +492,7 @@ class Product {
         })
         .slice(0, 4);
       let NewProducts = await productModel
-        .find({})
+        .find({ pStatus: "Active" })
         .limit(4)
         .sort({ createdAt: -1 });
 

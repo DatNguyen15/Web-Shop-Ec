@@ -34,7 +34,7 @@ const DashboardCard = (props) => {
             {data ? data.totalData.Users : 0}
           </div>
           <div className="text-lg font-medium">Customers</div>
-          <div className="flex items-center space-x-1 text-green-500">
+          {/* <div className="flex items-center space-x-1 text-green-500">
             <span>7%</span>
             <span>
               <svg
@@ -52,7 +52,7 @@ const DashboardCard = (props) => {
                 />
               </svg>
             </span>
-          </div>
+          </div> */}
         </div>
         <div
           onClick={(e) => {
@@ -80,7 +80,7 @@ const DashboardCard = (props) => {
             {data ? data.totalData.Orders : 0}
           </div>
           <div className="text-lg font-medium">Orders</div>
-          <div className="flex items-center space-x-1 text-green-500">
+          {/* <div className="flex items-center space-x-1 text-green-500">
             <span>10%</span>
             <span>
               <svg
@@ -98,7 +98,7 @@ const DashboardCard = (props) => {
                 />
               </svg>
             </span>
-          </div>
+          </div> */}
         </div>
         <div
           onClick={(e) => {

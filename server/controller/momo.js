@@ -12,7 +12,8 @@ const MoMo = async (request, response) => {
   var id = mongoose.Types.ObjectId();
   const exchangeRate = await currency.getCurrency("usd-vnd");
   console.log("tỷ giá:", Number(exchangeRate.lastValue));
-  let amountVND = Number(amountTotal) * Number(exchangeRate.lastValue) + "";
+  let amountVND =
+    Math.round(Number(amountTotal) * Number(exchangeRate.lastValue)) + "";
   console.log("tiền sau khi đổi" + amountVND);
   let productMoMo = [];
 
